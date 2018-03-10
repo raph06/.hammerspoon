@@ -40,7 +40,6 @@ Chose between:
 
 - F4 (dashboard key) to display/hide spootlight\n
 - F4 (dashboard key") to super if hold
-- F3 (spaces) to "show desktop"
 
  #### super key
 
@@ -81,7 +80,13 @@ keys.air="your_key"
 
 return keys
 ```
-May require npm packages for IOTDs
+ #### Requirements
+- May require npm packages for IOTDs 
+ 
+ #### Karabiner-element mappings 
+
+- F3 (spaces) F11 (show desktop)
+- F4 (dashboard) to F18 (soon to be super)
 
 ## Credit: some of the script, spoons and modules were adapted from
 
