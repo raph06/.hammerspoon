@@ -313,13 +313,6 @@ table.insert(menuitems_table, {
     fn = function() obj:nasaRequest() end
 })
 table.insert(menuitems_table, {
-    title = "Earth",menu={
-   { title = "save", fn = function()
-   fun="cp " .. os.getenv("HOME") .. "/.hammerspoon/BingDaily/media/world_sunlight_map_rectangular.jpg " .. os.getenv("HOME") .. "/.hammerspoon/BingDaily/media/selection/earth.jpeg"
-   hs.execute(fun) end}},
-    fn = function() obj:earthRequest() end
-})
-table.insert(menuitems_table, {
     title = "National Geo",menu={
    { title = "save", fn = function()
    but1,name=hs.dialog.textPrompt('Save', 'Save file as', '','Ok')
