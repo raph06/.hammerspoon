@@ -23,7 +23,7 @@ file:close()
 local decode_data_air = hs.json.decode(air_info)
 local aqi=decode_data_air.data.aqi
 local station=decode_data_air.data.city.name
-local data="station: "..decode_data_air.data.city.name..'\nHumidity: '..decode_data_air.data.iaqi.h.v..'\nPression: '..decode_data_air.data.iaqi.p.v..'\nPM10: '..decode_data_air.data.iaqi.pm10.v..'\nUpdated:'..decode_data_air.data.time.s
+local data="station: "..decode_data_air.data.city.name..'\nPression: '..decode_data_air.data.iaqi.p.v..'\nPM10: '..decode_data_air.data.iaqi.pm10.v..'\nUpdated:'..decode_data_air.data.time.s
 return aqi, data
 end
 

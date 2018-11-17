@@ -143,17 +143,23 @@ hs.http.asyncGet(json_req_url_nat, {["User-Agent"]=user_agent_str}, function(sta
 
                 obj.decode_data = hs.json.decode(body)
                 --for i,v in ipairs(decode_data.items[1]) do print(v) end
-                --    for k in pairs(decode_data.items[1]) do print(k) end
-                obj.caption=obj.decode_data.items[1].caption
+                  --  for k in pairs(decode_data.items[1]) do print(k) end
+                obj.caption=obj.decode_data.items[1].altText
+                print(obj.caption)
                 obj.caption=obj.caption:gsub("<p>","")
                 obj.caption=obj.caption:gsub("</p>","")
                 obj.caption=obj.caption:gsub("&quot;","'")
-
+				print(obj.caption)
                 obj.picurla = obj.decode_data.items[1].url
                 obj.picurlb = obj.decode_data.items[1].originalUrl
-                url= obj.picurla .. obj.picurlb
+            	print(obj.picurla)
+                --url= obj.picurla .. obj.picurlb  
+                url= obj.picurlb                
+                print(url)
                 obj.title=obj.decode_data.items[1].title
-                obj.menubar:setTooltip(obj.title .. '\n' .. obj.caption)
+            	obj.credit=obj.decode_data.items[1].credit
+
+                obj.menubar:setTooltip(obj.title .. '\n' .. obj.caption .. '\n' .. obj.credit)
                 if obj.task then
                     obj.task:terminate()
                     obj.task = nil
@@ -195,24 +201,28 @@ function obj:flickrRequest_gr(query)
 obj.group_url="https://api.flickr.com/services/rest/?method=flickr.groups.search&api_key="..keys.flickr.."&text="..query.."&format=json&nojsoncallback=1"
 hs.http.asyncGet(obj.group_url, {["User-Agent"]=user_agent_str}, function(stat,body,header)
 local decode_data_g = hs.json.decode(body)
---print(decode_data_g)
+  print(decode_data_g)
   selected_gr=math.random(1,#decode_data_g.groups.group)
 gr_id=decode_data_g.groups.group[selected_gr].nsid
-  gr_tot=decode_data_g.groups.pages
+  --gr_tot=decode_data_g.groups.pages
+  gr_tot=decode_data_g.groups.group[selected_gr].pool_count
   page=math.random(1,gr_tot)
 file = io.open("BingDaily/flickr_group.txt", "w")
 file:write(page.."\n")
 file:write(gr_id)
 file:close()
 end)
+
 end
 
 function obj:flickrRequest(page_req,id_req)
     local user_agent_str = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"
   local json_req_url="https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&per_page=1&page="..page_req.."&api_key="..keys.flickr.."&extras=url_l&group_id="..id_req.."&format=json&nojsoncallback=1"
+print(json_req_url)
 hs.http.asyncGet(json_req_url, {["User-Agent"]=user_agent_str}, function(stat,body,header)
             if pcall(function() hs.json.decode(body) end) then
                 local decode_data = hs.json.decode(body)
+                  print(decode_data)
                 obj.title=decode_data.photos.photo[1].title
                 --for i,v in ipairs(decode_data.photos.photo) do print(v) end
                 --for k in pairs(decode_data.photos.photo) do print(k) end
@@ -338,8 +348,8 @@ table.insert(menuitems_table, {
    hs.execute(fun) end}},
     fn = function()
         but1,res=hs.dialog.textPrompt('Category search', "what's your mood today?", 'Enter a theme here...','Ok', 'Random')
-         if (res~='Enter a theme here...') then res=res:gsub(" ","%%20") end
         if res~='Enter a theme here...' then
+        res=res:gsub(" ","%%20")
           str="BingDaily/RequestJSON.js -r " .. res .. " -k " .. keys.unsplash_applicationId .. " " .. keys.unsplash_secret .. " " .. keys.unsplash_callbackUrl
           hs.execute(str,true)
           local file = io.open( "BingDaily/JSONrequested.txt", "r" )
@@ -374,8 +384,22 @@ table.insert(menuitems_table, {
    { title = "save", fn = function()
    but1,name=hs.dialog.textPrompt('Save', 'Save file as', '','Ok')
    fun="cp " .. os.getenv("HOME") .. "/.hammerspoon/BingDaily/media/flickr.jpeg " .. os.getenv("HOME") .. "/.hammerspoon/BingDaily/media/selection/".. name ..".jpeg"
-   hs.execute(fun) end},
-       { title = "refresh", fn = function()
+   hs.execute(fun) end}},
+     fn = function()
+             
+       but1,res=hs.dialog.textPrompt('Group search', "what's your mood today?", 'Enter a theme here...','Random', '1280x800')
+         if (res~='Enter a theme here...') then res=res:gsub(" ","%%20") end
+  if (res~='Enter a theme here...') and (but1 == "Random") then
+    query=res
+    obj:flickrRequest_gr(query)
+
+  elseif but1 ~= "Random" then
+    query=res
+    obj:flickrRequest_gr("1280x800")
+  else
+    query=res
+  end
+   hs.timer.doAfter(5,function() 
        local f=io.open("BingDaily/flickr_group.txt","r")
        if f~=nil then
        io.close(f)
@@ -383,26 +407,34 @@ table.insert(menuitems_table, {
        page = file:read()
        group = file:read()
        file:close()
+       	 hs.alert.show("Group" ..group.. " requested succesfully")
+
     obj:flickrRequest(page,group)
+         hs.timer.doAfter(3,function() 
+        obj:flickrRequest(page,group)
+end)
        else hs.alert.show("no file") end
-        end },
-        {title ="Request group", fn = function()
-but1,res=hs.dialog.textPrompt('Group search', "what's your mood today?", 'Enter a theme here...','Random', '1280x800')
-         if (res~='Enter a theme here...') then res=res:gsub(" ","%%20") end
-  if (res~='Enter a theme here...') and (but1 == "Random") then
-    query=res
-    obj:flickrRequest_gr(query)
-  elseif but1 ~= "Random" then
-    query=res
-    obj:flickrRequest_gr("1280x800")
-  else
-    query=res
-  end
-        end}
-   },
+end)
+        end })
+        --,
+--        {title ="Request group", fn = function()
+--but1,res=hs.dialog.textPrompt('Group search', "what's your mood today?", 'Enter a theme here...','Random', '1280x800')
+--         if (res~='Enter a theme here...') then res=res:gsub(" ","%%20") end
+--  if (res~='Enter a theme here...') and (but1 == "Random") then
+--    query=res
+--    obj:flickrRequest_gr(query)
+--  elseif but1 ~= "Random" then
+ --   query=res
+ --   obj:flickrRequest_gr("1280x800")
+ -- else
+  --  query=res
+  --end
+    --    end}
+  
+   --,
     --fn = function()
     --end
-})
+--})
 table.insert(menuitems_table, {
     title = "Reddit",menu={
    { title = "save", fn = function()

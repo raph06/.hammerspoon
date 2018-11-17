@@ -1,5 +1,6 @@
 local LOGLEVEL = 'debug'
 local keys=require("api_keys")
+
 -- List of modules to load (found in modules/ dir)
 local modules = {
   'appwindows',
@@ -87,11 +88,20 @@ k:bind('', 'f', nil, ffun)
 
 -- HYPER+N: Open news.google.com in the default browser
 nfun = function()
+  --java
   news = "app = Application.currentApplication(); app.includeStandardAdditions = true; app.doShellScript('open http://news.google.com')"
   hs.osascript.javascript(news)
   k.triggered = true
 end
 k:bind('', 'n', nil, nfun)
+
+-- HYPER+M: Switch light dar mode mojave
+mfun = function()
+  local mode='tell application "System Events" \n tell appearance preferences \n set dark mode to not dark mode \n end tell \n end tell'
+  hs.osascript.applescript(mode)
+  k.triggered = true
+end
+k:bind('', 'm', nil, mfun)
 
 
 --- cal
