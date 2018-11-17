@@ -43,6 +43,7 @@ Chose between:
 
  #### super key
 
+- super+M = switch between light and dark mode in mojave
 - super+D = display/hide month's calendar upfront
 - super+F = launch facebook
 - super+N = launch google news
