@@ -57,7 +57,7 @@ Chose between:
 
  #### other
  
-- cmd+alt+L= gtranslate window 
+- cmd+ctrl+L= gtranslate window 
 
 ### Installation
 
