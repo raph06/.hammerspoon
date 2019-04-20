@@ -79,6 +79,10 @@ keys.translate="your_key"
 
 keys.air="your_key"
 
+keys.weather_app='your_key'
+keys.weather_user='your_key'
+keys.weather_secret='your_key'
+
 return keys
 ```
  #### Requirements
@@ -93,6 +97,7 @@ return keys
 
 - https://github.com/Hammerspoon/Spoons ( WinWin, Calendar, Bingdaily )
 - https://github.com/pasiaj/Translate-for-Hammerspoon ( gtranslate )
-- https://github.com/scottcs/dot_hammerspoon ( weather, caffeine, appwindows )
+- https://github.com/skamsie/hs-weather (weather)
+- https://github.com/scottcs/dot_hammerspoon (caffeine, appwindows )
 - https://github.com/lodestone/hyper-hacks/tree/master/hammerspoon ( key bindings )
 - wheather icons by RNS, Freepik, Vectors Market, Yannick at http://www.flaticon.com
