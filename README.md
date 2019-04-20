@@ -5,7 +5,7 @@ hammerspoon config
 
 > Edit hs-weather/config.json to set location
 
-Weather data: [Yahoo Weather API](https://developer.yahoo.com/weather/). It does not require an api key.  
+Weather data: [Yahoo Weather API](https://developer.yahoo.com/weather/) requires an api key.  
 Air Quality Indice: From http://aqicn.org/ requires API key
 
 ### Caffeine menubar icon 
