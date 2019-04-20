@@ -153,8 +153,8 @@ hs.http.asyncGet(json_req_url_nat, {["User-Agent"]=user_agent_str}, function(sta
                 obj.picurla = obj.decode_data.items[1].url
                 obj.picurlb = obj.decode_data.items[1].originalUrl
             	print(obj.picurla)
-                --url= obj.picurla .. obj.picurlb  
-                url= obj.picurlb                
+                --url= obj.picurla .. obj.picurlb
+                url= obj.picurlb
                 print(url)
                 obj.title=obj.decode_data.items[1].title
             	obj.credit=obj.decode_data.items[1].credit
@@ -386,7 +386,7 @@ table.insert(menuitems_table, {
    fun="cp " .. os.getenv("HOME") .. "/.hammerspoon/BingDaily/media/flickr.jpeg " .. os.getenv("HOME") .. "/.hammerspoon/BingDaily/media/selection/".. name ..".jpeg"
    hs.execute(fun) end}},
      fn = function()
-             
+
        but1,res=hs.dialog.textPrompt('Group search', "what's your mood today?", 'Enter a theme here...','Random', '1280x800')
          if (res~='Enter a theme here...') then res=res:gsub(" ","%%20") end
   if (res~='Enter a theme here...') and (but1 == "Random") then
@@ -399,7 +399,7 @@ table.insert(menuitems_table, {
   else
     query=res
   end
-   hs.timer.doAfter(5,function() 
+   hs.timer.doAfter(5,function()
        local f=io.open("BingDaily/flickr_group.txt","r")
        if f~=nil then
        io.close(f)
@@ -410,7 +410,7 @@ table.insert(menuitems_table, {
        	 hs.alert.show("Group" ..group.. " requested succesfully")
 
     obj:flickrRequest(page,group)
-         hs.timer.doAfter(3,function() 
+         hs.timer.doAfter(3,function()
         obj:flickrRequest(page,group)
 end)
        else hs.alert.show("no file") end
@@ -430,7 +430,7 @@ end)
   --  query=res
   --end
     --    end}
-  
+
    --,
     --fn = function()
     --end

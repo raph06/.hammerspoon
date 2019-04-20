@@ -16,6 +16,20 @@ local function curl_callback(exitCode, stdOut, stdErr)
    end
 end
 
+function m:wtInfo()
+local file = io.open( "hs-weather/query.txt", "r" )
+wt_info = file:read()
+file:close()
+local decode_data_wt = hs.json.decode(wt_info)
+local temp = decode_data_wt.current_observation.condition.temperature
+local code = tonumber(decode_data_wt.current_observation.condition.code)
+local i=1
+local condition = decode_data_wt.current_observation.condition.text .. ' - Wind chill: ' .. decode_data_wt.current_observation.wind.chill .. "°C at " .. decode_data_wt.current_observation.wind.speed .. "km/h\nForecast: " .. decode_data_wt.forecasts[i].text .. " ; temp: " .. decode_data_wt.forecasts[i].low .. " to " .. decode_data_wt.forecasts[i].high.. "°C"
+
+local title = decode_data_wt.location.city .. ", " .. decode_data_wt.location.region
+return temp, code, condition, title
+end
+
 function m:airInfo()
 local file = io.open( "hs-weather/air.txt", "r" )
 air_info = file:read()
@@ -23,7 +37,7 @@ file:close()
 local decode_data_air = hs.json.decode(air_info)
 local aqi=decode_data_air.data.aqi
 local station=decode_data_air.data.city.name
-local data="station: "..decode_data_air.data.city.name..'\nPression: '..decode_data_air.data.iaqi.p.v..'\nPM10: '..decode_data_air.data.iaqi.pm10.v..'\nUpdated:'..decode_data_air.data.time.s
+local data="station: "..decode_data_air.data.city.name..'\nPression PM10: '..decode_data_air.data.iaqi.pm10.v..' PM25: '..decode_data_air.data.iaqi.pm25.v..'\nUpdated:'..decode_data_air.data.time.s
 return aqi, data
 end
 
@@ -82,7 +96,8 @@ local weatherSymbols = {
   [45] = (iconsDir .. 'storm.png'),       -- thundershowers
   [46] = (iconsDir .. 'snowflake.png'),   -- snow showers
   [47] = (iconsDir .. 'lightning.png'),   -- isolated thundershowers
-  [3200] = (iconsDir .. 'na.png')         -- not available
+  [3200] = (iconsDir .. 'na.png'),
+  [3201] = (iconsDir .. 'out.png')         -- not available       -- not available
 }
 
 local function readConfig(file)
@@ -113,7 +128,8 @@ end
 
 local function setWeatherTitle(app, unitSys, temp, aqi)
   if unitSys == 'C' then
-    local tempCelsius = toCelsius(temp)
+    --local tempCelsius = toCelsius(temp)
+    local tempCelsius = temp
     local tempRounded = math.floor(tempCelsius * 10 + 0.5) / 10
     --app:setTitle(tempRounded .. '°C ')
     if tempRounded < 5 then color_temp = { red = 0, blue = 204/255, green = 0 }
@@ -152,41 +168,52 @@ local function getWeather(location)
     urlBase .. urlencode(query .. location .. '")') .. '&format=json')
   return hs.http.get(weatherEndpoint)
 end
+print("ooooooook3")
 
 local function setWeatherForLocation(location, unitSys)
   lat=location:gsub('%(','')
   lat=lat:gsub(',.*','')
   long=location:gsub('.*,','')
   long=long:gsub('%)','')
+  print(lat)
+  print(long)
+  str="hs-weather/query.js --lat " .. lat .. " --lon " .. long .. " -k " .. keys.weather_app .. " " .. keys.weather_user .. " " .. keys.weather_secret
+  print(str)
+  hs.execute(str,true)
   local url= 'http://api.waqi.info/feed/'..'geo:'..lat..';'..long..'/?token='.. keys.air
  local task = hs.task.new("/usr/bin/curl", curl_callback, {url, "-o", './hs-weather/air.txt'})
   task:start()
-  local weatherEndpoint = (
-    urlBase .. urlencode(query .. location .. '")') .. '&format=json')
-  hs.http.asyncGet(weatherEndpoint, nil,
-    function(code, body, table)
-      if code ~= 200 then
-        print('-- hs-weather: Could not get weather. Response code: ' .. code)
-      else
-        print('-- hs-weather: Weather for ' .. location .. ': ' .. body)
-        local response = hs.json.decode(body)
-        if response.query.results == nil then
-          if m.weatherApp:title() == '' then
-            setWeatherIcon(m.weatherApp, 3200)
-          end
-        else
-          local temp = response.query.results.channel.item.condition.temp
-          local code = tonumber(response.query.results.channel.item.condition.code)
-          local condition = response.query.results.channel.item.condition.text
-          local title = response.query.results.channel.item.title
+  temp,code,condition,title=m.wtInfo()
+  print(temp,code,condition,title)
+
+--local weatherEndpoint = (
+--    urlBase .. urlencode(query .. location .. '")') .. '&format=json')
+--  hs.http.asyncGet(url, nil,
+--    function(code, body, table)
+--      if code ~= 200 then
+--        aqi,data_air=m.airInfo()
+--      setWeatherIcon(m.weatherApp, 3201)
+--        print('-- hs-weather: Could not get weather. Response code: ' .. code)
+--      else
+--        print('-- hs-weather: Weather for ' .. location .. ': ' .. body)
+--        local response = hs.json.decode(body)
+--        print(response)
+--
+--        if response.query.results == nil then
+--          if m.weatherApp:title() == '' then
+--          setWeatherIcon(m.weatherApp, 3200)
+--          end
+--        else
+
           aqi,data_air=m.airInfo()
+          temp,code,condition,title=m.wtInfo()
           setWeatherIcon(m.weatherApp, code)
           setWeatherTitle(m.weatherApp, unitSys, temp ,aqi)
           m.weatherApp:setTooltip((title .. '\n' .. condition.. '\nAir ' .. data_air))
-        end
-      end
-    end
-  )
+--        end
+--      end
+--    end
+--  )
 end
 
 -- Get weather for current location
