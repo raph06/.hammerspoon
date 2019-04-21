@@ -15,6 +15,7 @@ local function curl_callback(exitCode, stdOut, stdErr)
        print(stdOut, stdErr)
    end
 end
+date = os.date("*t", time)
 
 function m:wtInfo()
 local file = io.open( "hs-weather/query.txt", "r" )
@@ -23,12 +24,14 @@ file:close()
 local decode_data_wt = hs.json.decode(wt_info)
 local temp = decode_data_wt.current_observation.condition.temperature
 local code = tonumber(decode_data_wt.current_observation.condition.code)
-local i=1
+local i=date.wday+1
 local condition = decode_data_wt.current_observation.condition.text .. ' - Wind chill: ' .. decode_data_wt.current_observation.wind.chill .. "°C at " .. decode_data_wt.current_observation.wind.speed .. "km/h\nForecast: " .. decode_data_wt.forecasts[i].text .. " ; temp: " .. decode_data_wt.forecasts[i].low .. " to " .. decode_data_wt.forecasts[i].high.. "°C"
 
-local title = decode_data_wt.location.city .. ", " .. decode_data_wt.location.region
+local title = decode_data_wt.location.city .. ", " .. decode_data_wt.location.region .."\nSun is up from: " .. decode_data_wt.current_observation.astronomy.sunrise .. " to " .. decode_data_wt.current_observation.astronomy.sunset
 return temp, code, condition, title
 end
+
+
 
 function m:airInfo()
 local file = io.open( "hs-weather/air.txt", "r" )
@@ -163,11 +166,11 @@ local function urlencode(str)
   return str
 end
 
-local function getWeather(location)
-  local weatherEndpoint = (
-    urlBase .. urlencode(query .. location .. '")') .. '&format=json')
-  return hs.http.get(weatherEndpoint)
-end
+--local function getWeather(location)
+---  local weatherEndpoint = (
+---    urlBase .. urlencode(query .. location .. '")') .. '&format=json')
+  ---return hs.http.get(weatherEndpoint)
+--end
 print("ooooooook3")
 
 local function setWeatherForLocation(location, unitSys)
@@ -178,7 +181,6 @@ local function setWeatherForLocation(location, unitSys)
   print(lat)
   print(long)
   str="hs-weather/query.js --lat " .. lat .. " --lon " .. long .. " -k " .. keys.weather_app .. " " .. keys.weather_user .. " " .. keys.weather_secret
-  print(str)
   hs.execute(str,true)
   local url= 'http://api.waqi.info/feed/'..'geo:'..lat..';'..long..'/?token='.. keys.air
  local task = hs.task.new("/usr/bin/curl", curl_callback, {url, "-o", './hs-weather/air.txt'})

@@ -82,6 +82,9 @@ function mod.gtranslate()
         if string:len() == 0 then return reset() end
 
         hs.http.asyncGet(string.format(GOOGLE_ENDPOINT, target, source, API_KEY, query), nil, function(status, data)
+            print("ooooooook")
+            print(data)
+
             if not data then return end
 
             local ok, results = pcall(function() return hs.json.decode(data) end)
