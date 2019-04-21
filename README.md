@@ -38,26 +38,27 @@ Chose between:
 
  #### Mackeys
 
-- F4 (dashboard key) to display/hide spootlight\n
-- F4 (dashboard key") to super if hold
+- <kbd>F4</kbd> (dashboard key) to display/hide spootlight\n
+- <kbd>F4</kbd> (dashboard key") to super if hold
+
 
  #### super key
 
-- super+M = switch between light and dark mode in mojave
-- super+D = display/hide month's calendar upfront
-- super+F = launch facebook
-- super+N = launch google news
-- super+Q = quit all visible apps
-- super+R = Reload hammerspoon config
-- super+T = launch Terminal
-- super+rightarrow = go to end of line
-- super+leftarrow = go to beginning of line
-- super+cmd+left or right or down or up = resize window to left/right/down/up half screen
-- super+cmd+@ = resize to whole screen
+- <kbd>super;</kbd> + <kbd>M</kbd> = switch between light and dark mode in mojave
+- <kbd>super</kbd> + <kbd>D</kbd> = display/hide month's calendar upfront
+- <kbd>super</kbd> + <kbd>F</kbd> = launch facebook
+- <kbd>super</kbd> + <kbd>N</kbd> = launch google news
+- <kbd>super</kbd> + <kbd>Q</kbd> = quit all visible apps
+- <kbd>super</kbd> + <kbd>R</kbd> = Reload hammerspoon config
+- <kbd>super</kbd> + <kbd>T</kbd> = launch Terminal
+- <kbd>super</kbd> + <kbd>→</kbd> = go to end of line
+- <kbd>super</kbd> + <kbd>←</kbd> = go to beginning of line
+- <kbd>super</kbd> + <kbd>cmd ⌘</kbd> + <kbd>←</kbd> or <kbd>→</kbd> or <kbd>↓</kbd> or <kbd>↑</kbd> = resize window to left/right/down/up half screen
+- <kbd>super</kbd> + <kbd>cmd ⌘</kbd> + <kbd>@</kbd> = resize to whole screen
 
  #### other
  
-- cmd+ctrl+L= gtranslate window 
+- <kbd>cmd ⌘</kbd>+<kbd>ctrl</kbd>+<kbd>L</kbd>= gtranslate window 
 
 ### Installation
 
@@ -90,8 +91,8 @@ return keys
  
  #### Karabiner-element mappings 
 
-- F3 (spaces) F11 (show desktop)
-- F4 (dashboard) to F18 (soon to be super)
+- <kbd>F3</kbd> (spaces) <kbd>F11</kbd> (show desktop)
+- <kbd>F4</kbd> (dashboard) to <kbd>F18</kbd> (soon to be super)
 
 ## Credit: some of the script, spoons and modules were adapted from
 
