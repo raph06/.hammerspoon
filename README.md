@@ -53,7 +53,7 @@ Chose between:
 - <kbd>super</kbd> + <kbd>T</kbd> = launch Terminal
 - <kbd>super</kbd> + <kbd>→</kbd> = go to end of line
 - <kbd>super</kbd> + <kbd>←</kbd> = go to beginning of line
-- <kbd>super</kbd> + <kbd>cmd ⌘</kbd> + <kbd>←</kbd> or <kbd>→</kbd> or <kbd>↓</kbd> or <kbd>↑</kbd> = resize window to left/right/down/up half screen
+- <kbd>super</kbd> + <kbd>cmd ⌘</kbd> + <kbd>←</kbd> <kbd>→</kbd> <kbd>↓</kbd> <kbd>↑</kbd> = resize window to left/right/down/up half screen
 - <kbd>super</kbd> + <kbd>cmd ⌘</kbd> + <kbd>@</kbd> = resize to whole screen
 
  #### other
