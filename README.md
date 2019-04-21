@@ -44,7 +44,7 @@ Chose between:
 
  #### super key
 
-- <details><summary> <kbd>super</kbd> + <kbd>M</kbd> = switch between light and dark mode in mojave </summary></details>
+- <kbd>super</kbd> + <kbd>M</kbd> = switch between light and dark mode in mojave
 - <kbd>super</kbd> + <kbd>D</kbd> = display/hide month's calendar upfront
 - <kbd>super</kbd> + <kbd>F</kbd> = launch facebook
 - <kbd>super</kbd> + <kbd>N</kbd> = launch google news
