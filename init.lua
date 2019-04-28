@@ -99,7 +99,7 @@ k:bind('', 'n', nil, nfun)
 mfun = function()
   local mode='tell application "System Events" \n tell appearance preferences \n set dark mode to not dark mode \n end tell \n end tell'
   hs.osascript.applescript(mode)
-  k.triggered = true
+  k.triggered = true     
 end
 k:bind('', 'm', nil, mfun)
 

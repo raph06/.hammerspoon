@@ -40,7 +40,7 @@ file:close()
 local decode_data_air = hs.json.decode(air_info)
 local aqi=decode_data_air.data.aqi
 local station=decode_data_air.data.city.name
-local data="station: "..decode_data_air.data.city.name..'\nPression PM10: '..decode_data_air.data.iaqi.pm10.v..' PM25: '..decode_data_air.data.iaqi.pm25.v..'\nUpdated:'..decode_data_air.data.time.s
+local data="station: "..decode_data_air.data.city.name..'\nPression PM25: '..decode_data_air.data.iaqi.pm25.v..'\nUpdated:'..decode_data_air.data.time.s
 return aqi, data
 end
 
@@ -130,6 +130,19 @@ end
 
 
 local function setWeatherTitle(app, unitSys, temp, aqi)
+  ok,appleScriptResult = hs.osascript.applescript([[  
+tell application "System Events"
+	tell appearance preferences
+		if (dark mode) then
+			return true
+		else
+			return false
+		end if
+	end tell
+end tell
+     ]])     
+    
+    
   if unitSys == 'C' then
     --local tempCelsius = toCelsius(temp)
     local tempCelsius = temp
@@ -139,6 +152,7 @@ local function setWeatherTitle(app, unitSys, temp, aqi)
     elseif tempRounded < 15 and tempRounded >= 5 then color_temp = { red = 0, blue = 153/255, green = 153/255 }
   elseif tempRounded >= 25 and tempRounded < 30 then color_temp = { red = 1, blue = 0, green = 128/255 }
   elseif tempRounded >= 35 then color_temp = { red = 1, blue = 51/255, green = 51/255 }
+  elseif appleScriptResult ==true then color_temp = { red = 255, blue = 255, green = 255 } 
   else color_temp = { red = 0, blue = 0, green = 0 } end
 
   if aqi < 50 then color_aqi = { red = 102/255, blue = 0, green = 204/255 }
@@ -183,6 +197,7 @@ local function setWeatherForLocation(location, unitSys)
   str="hs-weather/query.js --lat " .. lat .. " --lon " .. long .. " -k " .. keys.weather_app .. " " .. keys.weather_user .. " " .. keys.weather_secret
   hs.execute(str,true)
   local url= 'http://api.waqi.info/feed/'..'geo:'..lat..';'..long..'/?token='.. keys.air
+  print(url)
  local task = hs.task.new("/usr/bin/curl", curl_callback, {url, "-o", './hs-weather/air.txt'})
   task:start()
   temp,code,condition,title=m.wtInfo()
