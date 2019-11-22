@@ -8,7 +8,7 @@ local urlBase = 'https://query.yahooapis.com/v1/public/yql?q='
 local query = 'select item.title, item.condition from weather.forecast where \
                woeid in (select woeid from geo.places(1) where text="'
 
-local function curl_callback(exitCode, stdOut, stdErr)
+function curl_callback(exitCode, stdOut, stdErr)
    if exitCode == 0 then
        m.task = nil
        else
@@ -103,7 +103,7 @@ local weatherSymbols = {
   [3201] = (iconsDir .. 'out.png')         -- not available       -- not available
 }
 
-local function readConfig(file)
+function readConfig(file)
   local f = io.open(file, "rb")
   if not f then
     return {}
@@ -113,7 +113,7 @@ local function readConfig(file)
   return hs.json.decode(content)
 end
 
-local function setWeatherIcon(app, code)
+function setWeatherIcon(app, code)
   local iconPath = weatherSymbols[code]
   local size = {w=16,h=16}
   if iconPath ~= nil then
@@ -123,14 +123,14 @@ local function setWeatherIcon(app, code)
   end
 end
 
-local function toCelsius(f)
+function toCelsius(f)
   return (f - 32) * 5 / 9
 end
 
 
 
-local function setWeatherTitle(app, unitSys, temp, aqi)
-  ok,appleScriptResult = hs.osascript.applescript([[  
+function setWeatherTitle(app, unitSys, temp, aqi)
+  ok,appleScriptResult = hs.osascript.applescript([[
 tell application "System Events"
 	tell appearance preferences
 		if (dark mode) then
@@ -140,9 +140,9 @@ tell application "System Events"
 		end if
 	end tell
 end tell
-     ]])     
-    
-    
+     ]])
+
+
   if unitSys == 'C' then
     --local tempCelsius = toCelsius(temp)
     local tempCelsius = temp
@@ -152,7 +152,7 @@ end tell
     elseif tempRounded < 15 and tempRounded >= 5 then color_temp = { red = 0, blue = 153/255, green = 153/255 }
   elseif tempRounded >= 25 and tempRounded < 30 then color_temp = { red = 1, blue = 0, green = 128/255 }
   elseif tempRounded >= 35 then color_temp = { red = 1, blue = 51/255, green = 51/255 }
-  elseif appleScriptResult ==true then color_temp = { red = 255, blue = 255, green = 255 } 
+  elseif appleScriptResult ==true then color_temp = { red = 255, blue = 255, green = 255 }
   else color_temp = { red = 0, blue = 0, green = 0 } end
 
   if aqi < 50 then color_aqi = { red = 102/255, blue = 0, green = 204/255 }
@@ -170,7 +170,7 @@ else color_aqi = { red = 1, blue = 0, green = 0  } end
   end
 end
 
-local function urlencode(str)
+function urlencode(str)
   if (str) then
     str = string.gsub (str, "\n", "\r\n")
     str = string.gsub (str, "([^%w ])",
@@ -180,14 +180,13 @@ local function urlencode(str)
   return str
 end
 
---local function getWeather(location)
+--function getWeather(location)
 ---  local weatherEndpoint = (
 ---    urlBase .. urlencode(query .. location .. '")') .. '&format=json')
   ---return hs.http.get(weatherEndpoint)
 --end
-print("ooooooook3")
 
-local function setWeatherForLocation(location, unitSys)
+function setWeatherForLocation(location, unitSys)
   lat=location:gsub('%(','')
   lat=lat:gsub(',.*','')
   long=location:gsub('.*,','')
@@ -232,27 +231,30 @@ local function setWeatherForLocation(location, unitSys)
 --    end
 --  )
 end
-
+loc = hs.location.get()
+print("ooooooook3")
+print(loc)
 -- Get weather for current location
 -- Hammerspoon needs access to OS location services
-local function setWeatherForCurrentLocation(unitSys)
+function setWeatherForCurrentLocation(loc,unitSys)
   if hs.location.servicesEnabled() then
     --hs.location.start()
-    hs.timer.doAfter(1,
+    hs.timer.doAfter(3,
       function ()
         local loc = hs.location.get()
-        hs.location.stop()
+        --hs.location.stop()
+        local lat_lon='(' .. loc.latitude .. ',' .. loc.longitude .. ')'
         setWeatherForLocation(
-          '(' .. loc.latitude .. ',' .. loc.longitude .. ')', unitSys)
+          lat_lon, unitSys)
       end)
   else
     print('\n-- Location services disabled!\n')
   end
 end
 
-local function setWeather()
+function setWeather()
   if m.config.geolocation then
-    setWeatherForCurrentLocation(m.config.units)
+    setWeatherForCurrentLocation(loc,m.config.units)
   else
     setWeatherForLocation(m.config.location, m.config.units)
   end

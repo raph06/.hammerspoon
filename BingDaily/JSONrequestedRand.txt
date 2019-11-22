@@ -1,1 +1,1 @@
-"https://images.unsplash.com/photo-1554188068-3666131be6ca?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjE4MDI1fQ"
+"https://images.unsplash.com/photo-1570342983741-774dafbc7ccc?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjE4MDI1fQ"

@@ -142,22 +142,26 @@ hs.http.asyncGet(json_req_url_nat, {["User-Agent"]=user_agent_str}, function(sta
             if pcall(function() hs.json.decode(body) end) then
 
                 obj.decode_data = hs.json.decode(body)
+                print('oooooooooook')
+                --print(obj.decode_data.items[1].image.id)
+
                 --for i,v in ipairs(decode_data.items[1]) do print(v) end
-                  --  for k in pairs(decode_data.items[1]) do print(k) end
-                obj.caption=obj.decode_data.items[1].altText
+                  -- for k in pairs(decode_data.items) do print(k) end
+
+                obj.caption=obj.decode_data.items[1].image.alt_text
                 print(obj.caption)
                 obj.caption=obj.caption:gsub("<p>","")
                 obj.caption=obj.caption:gsub("</p>","")
                 obj.caption=obj.caption:gsub("&quot;","'")
 				print(obj.caption)
-                obj.picurla = obj.decode_data.items[1].url
-                obj.picurlb = obj.decode_data.items[1].originalUrl
+                obj.picurla = obj.decode_data.items[1].image.uri
+                --obj.picurlb = obj.decode_data.items[1].image.originalUrl
             	print(obj.picurla)
                 --url= obj.picurla .. obj.picurlb
-                url= obj.picurlb
+                url= obj.picurla
                 print(url)
-                obj.title=obj.decode_data.items[1].title
-            	obj.credit=obj.decode_data.items[1].credit
+                obj.title=obj.decode_data.items[1].image.title
+            	obj.credit=obj.decode_data.items[1].image.credit
 
                 obj.menubar:setTooltip(obj.title .. '\n' .. obj.caption .. '\n' .. obj.credit)
                 if obj.task then
